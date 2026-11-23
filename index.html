@@ -35,6 +35,7 @@
         object-position: center center;
         z-index: -2;
         pointer-events: none;
+        transition: opacity 0.5s ease;
       }
 
       .capa-oscura {
@@ -79,6 +80,19 @@
         transform: scale(1.05);
         box-shadow: 0 10px 25px rgba(255, 255, 255, 0.25);
         filter: brightness(1.08);
+      }
+
+      .mensaje-final {
+        width: 100%;
+        max-width: 900px;
+        margin: 45px auto 20px auto;
+        padding: 0 10px;
+      }
+
+      .mensaje-final p {
+        font-size: clamp(1rem, 3vw, 1.25rem);
+        line-height: 1.6;
+        margin-bottom: 16px;
       }
 
       .visor {
@@ -130,7 +144,7 @@
     </style>
   </head>
   <body>
-    <video class="video-fondo" autoplay muted loop playsinline>
+    <video id="reproductor-fondo" class="video-fondo" autoplay muted playsinline>
       <source src="video1.MP4" type="video/mp4" />
     </video>
     <div class="capa-oscura"></div>
@@ -139,7 +153,7 @@
     <p>TE AMO DEMASIADO MI VIDAAAAA</p>
 
     <div class="collage">
-       <img src="foto1.JPG" alt="Foto 1" onclick="agrandar(this.src)" />
+      <img src="foto1.JPG" alt="Foto 1" onclick="agrandar(this.src)" />
       <img src="foto2.JPG" alt="Foto 2" onclick="agrandar(this.src)" />
       <img src="foto3.JPG" alt="Foto 3" onclick="agrandar(this.src)" />
       <img src="foto4.JPG" alt="Foto 4" onclick="agrandar(this.src)" />
@@ -181,12 +195,41 @@
       <img src="foto40.JPG" alt="Foto 40" onclick="agrandar(this.src)" />
     </div>
 
+    <div class="mensaje-final">
+      <p>Hola mi vida, yo sé que esto no es mucho pero espero que te guste.</p>
+      <p>Que esto sea nuestro testigo de todo lo lindo q hicimos, hacemos y haremos para hoy y siempre.</p>
+      <p>Te amo. te amo más que a nada. Te amo mi vida.</p>
+    </div>
+
     <div id="visor" class="visor" onclick="cerrarVisor()">
       <span class="cerrar" onclick="cerrarVisor()">&times;</span>
       <img id="foto-grande" src="" alt="Foto ampliada" onclick="event.stopPropagation()" />
     </div>
 
     <script>
+     
+      const listaVideos = [
+        "video1.MP4",
+        "video2.MP4",
+        "video3.MP4",
+        "video1.MP4"
+      ];
+
+      let videoActual = 0;
+      const reproductor = document.getElementById("reproductor-fondo");
+
+      reproductor.addEventListener("ended", function () {
+        videoActual = (videoActual + 1) % listaVideos.length;
+        reproductor.style.opacity = 0;
+
+        setTimeout(function () {
+          reproductor.src = listaVideos[videoActual];
+          reproductor.load();
+          reproductor.play();
+          reproductor.style.opacity = 1;
+        }, 300);
+      });
+
       function agrandar(ruta) {
         document.getElementById("foto-grande").src = ruta;
         document.getElementById("visor").classList.add("activo");
@@ -203,7 +246,4 @@
       });
     </script>
   </body>
-  <p>Hola mi vida, yo sé que esto no es mucho pero espero que te guste.</p>
-<p>Que esto sea nuestro testigo de todo lo lindo q hicimos, hacemos y haremos para hoy y siempre.</p>
-<p>Te amo. te amo más que a nada. Te amo mi vida.</p>
 </html>
