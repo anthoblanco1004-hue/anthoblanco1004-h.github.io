@@ -5,23 +5,166 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hola mi bebé</title>
     <style>
+      * {
+        box-sizing: border-box;
+      }
+
       body {
         background-color: #1a1a1a;
-        background-image: url("foto2.JPG");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        min-height: 100vh;
+        min-height: 100dvh;
         margin: 0;
+        padding: 30px 15px;
         font-family: Georgia, serif;
         color: #ffffff;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.85);
+        text-align: center;
+        overflow-x: hidden;
+      }
+
+      .video-fondo {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        min-width: 100%;
+        min-height: 100%;
+        object-fit: cover;
+        object-position: center center;
+        z-index: -2;
+        pointer-events: none;
+      }
+
+      .capa-oscura {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100dvh;
+        background: rgba(0, 0, 0, 0.35);
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      h1 {
+        font-size: clamp(1.8rem, 5vw, 2.5rem);
+        margin-bottom: 10px;
+      }
+
+      p {
+        font-size: clamp(1rem, 3vw, 1.25rem);
+        margin-bottom: 30px;
+      }
+
+      .collage {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 14px;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .collage img {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        border-radius: 12px;
+        cursor: pointer;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+      }
+
+      .collage img:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 25px rgba(255, 255, 255, 0.25);
+        filter: brightness(1.08);
+      }
+
+      .visor {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.88);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        padding: 20px;
+        cursor: zoom-out;
+      }
+
+      .visor.activo {
+        display: flex;
+      }
+
+      .visor img {
+        max-width: 92%;
+        max-height: 85dvh;
+        border-radius: 12px;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.9);
+        animation: zoomIn 0.25s ease;
+        cursor: default;
+      }
+
+      .cerrar {
+        position: fixed;
+        top: 20px;
+        right: 25px;
+        font-size: 2.5rem;
+        color: #ffffff;
+        cursor: pointer;
+        user-select: none;
+        line-height: 1;
+      }
+
+      @keyframes zoomIn {
+        from {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
       }
     </style>
   </head>
   <body>
+    <video class="video-fondo" autoplay muted loop playsinline>
+      <source src="video1.MP4" type="video/mp4" />
+    </video>
+    <div class="capa-oscura"></div>
+
     <h1>Hola mi amor</h1>
-    <p>¿TE AMO DEMASIADO MI VIDAAAAA</p>
-    <img src="foto1.JPG" width="300" alt="Foto 1" />
+    <p>TE AMO DEMASIADO MI VIDAAAAA</p>
+
+    <div class="collage">
+      <img src="foto1.JPG" alt="vos re linda mal" onclick="agrandar(this.src)" />
+      <img src="foto3.JPG" alt="Foto 2" onclick="agrandar(this.src)" />
+      <img src="foto4.jpg" alt="Foto 2" onclick="agrandar(this.src)" />
+      <img src="foto5.jpg" alt="Foto 2" onclick="agrandar(this.src)" />
+    </div>
+
+    <div id="visor" class="visor" onclick="cerrarVisor()">
+      <span class="cerrar" onclick="cerrarVisor()">&times;</span>
+      <img id="foto-grande" src="" alt="Foto ampliada" onclick="event.stopPropagation()" />
+    </div>
+
+    <script>
+      function agrandar(ruta) {
+        document.getElementById("foto-grande").src = ruta;
+        document.getElementById("visor").classList.add("activo");
+      }
+
+      function cerrarVisor() {
+        document.getElementById("visor").classList.remove("activo");
+      }
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          cerrarVisor();
+        }
+      });
+    </script>
   </body>
 </html>
